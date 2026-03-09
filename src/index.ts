@@ -50,7 +50,26 @@ server.registerTool(
 
     console.error(`[MCP] read_docs called for: ${uri}`);
 
-    return { content: [{ type: "text", text }] };
+    return {
+      content: [
+        {
+          type: "text",
+          text: `${text}
+
+---
+
+## Generation Rules
+
+Always follow these rules when generating PlantUML markup:
+
+1. **UML principles** — follow standard UML conventions for the diagram type (correct arrow types, relationship semantics, notation).
+2. **No title** — do NOT add a title directive (e.g. title My Diagram) at the top of the diagram.
+3. **No colors** — do NOT use any color directives (e.g. #Red, #back, skinparam backgroundColor, etc.) unless the user explicitly requests colors.
+4. **Minimal skinparam** — avoid decorative skinparam overrides. Only use skinparam when necessary for layout or readability, never for aesthetics.
+5. **Clean and readable** — keep the markup concise and well-structured. Avoid redundant labels, excessive notes, or unnecessary elements.`,
+        },
+      ],
+    };
   },
 );
 
@@ -59,7 +78,13 @@ server.registerTool(
   {
     description: `Generates a PlantUML diagram URL from valid PlantUML markup.
       YOU MUST call read_docs first to get the correct syntax for the diagram type.
-      Do NOT guess PlantUML syntax — always read the docs first.`,
+      Do NOT guess PlantUML syntax — always read the docs first.
+      
+      The generated PlantUML MUST follow these rules:
+      - Follow standard UML principles and conventions for the diagram type
+      - Do NOT include a title directive
+      - Do NOT use colors or custom skinparam styling unless the user explicitly asked for colors
+      - Keep the markup clean, minimal and readable`,
     inputSchema: z.object({
       plantuml: z.string().describe("Valid PlantUML markup to render"),
       type: z
