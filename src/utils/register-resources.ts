@@ -1,8 +1,10 @@
 import { readFileSync, readdirSync } from "fs";
-import { join, basename } from "path";
+import { join, basename, dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export const RESOURCES_DIR = new URL("../resources", import.meta.url).pathname;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+export const RESOURCES_DIR = resolve(__dirname, "../resources");
 const resources = readdirSync(RESOURCES_DIR).filter((f) => f.endsWith(".md"));
 
 export const resourceList = resources.map(
